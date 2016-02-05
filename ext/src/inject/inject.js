@@ -2,7 +2,9 @@
 chrome.runtime.onMessage.addListener(function (req) {
   switch (req.type) {
     case "RUN":
-      run();
+      setTimeout(function () {
+        run()
+      }, 700);
       break;
     default:
       console.log("Error: Unknown request. : ", req);
@@ -10,18 +12,17 @@ chrome.runtime.onMessage.addListener(function (req) {
 });
 
 
-//TODO: 初期ロード時はうまくURLが書き換わるが、Pocket内での画面推移時にちゃんとURLが変わらないため修正する
 const run = () => {
   let originalUrls = getOriginalUrls();
   let $item_links = document.getElementsByClassName('item_link');
 
-  Array.prototype.forEach.call($item_links, function(elm, idx) {
+  Array.prototype.forEach.call($item_links, function (elm, idx) {
 
     //.item_linkのhrefを書き換える
     elm.href = originalUrls[idx];
 
     // 他のイベントリスナの実行を中止する
-    elm.addEventListener('click', function(e) {
+    elm.addEventListener('click', function (e) {
       e.stopImmediatePropagation();
     })
   });
