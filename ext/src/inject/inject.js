@@ -33,3 +33,27 @@ const getOriginalUrls = () => {
   let targetElms = Array.prototype.slice.call(document.getElementsByClassName('original_url'));
   return targetElms.map((item) => item.href);
 };
+
+
+/*------------------------
+* AutoScrollに対応
+* ------------------------
+* Scrollイベントでbodyの高さを監視して、高さが増えるとrun()を再実行する
+* */
+function ScrollWatcher() {
+  this.bodyHeight = document.body.offsetHeight;
+}
+
+ScrollWatcher.prototype.watch = function () {
+  window.addEventListener('scroll', () => {
+    let _bodyHeight = document.body.offsetHeight;
+
+    if (this.bodyHeight !== _bodyHeight) {
+      run();
+      this.bodyHeight = _bodyHeight;
+    }
+  });
+};
+
+const scrollWatcher = new ScrollWatcher();
+scrollWatcher.watch();
