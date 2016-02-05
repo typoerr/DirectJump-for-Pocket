@@ -1,14 +1,7 @@
 "use strict";
-
-//TODO: background.jsからurlの変更messageを受取る
-//TODO: item_content数分のoriginal_urlを取得
-//TODO: item_contentのitem_linkを書き換える
-//TODO: item_linkのclickイベントを奪取
-
 chrome.runtime.onMessage.addListener(function (req) {
   switch (req.type) {
     case "RUN":
-      console.log('発火');
       run();
       break;
     default:
@@ -16,8 +9,26 @@ chrome.runtime.onMessage.addListener(function (req) {
   }
 });
 
-const run = () => {
-  let urls = document.getElementsByClassName('original_url');
-  console.log(urls[0].href);
 
+//TODO: 初期ロード時はうまくURLが書き換わるが、Pocket内での画面推移時にちゃんとURLが変わらないため修正する
+const run = () => {
+  let originalUrls = getOriginalUrls();
+  let $item_links = document.getElementsByClassName('item_link');
+
+  Array.prototype.forEach.call($item_links, function(elm, idx) {
+
+    //.item_linkのhrefを書き換える
+    elm.href = originalUrls[idx];
+
+    // 他のイベントリスナの実行を中止する
+    elm.addEventListener('click', function(e) {
+      e.stopImmediatePropagation();
+    })
+  });
+};
+
+// '.original_url'を取得してurlの配列を返す
+const getOriginalUrls = () => {
+  let targetElms = Array.prototype.slice.call(document.getElementsByClassName('original_url'));
+  return targetElms.map((item) => item.href);
 };
