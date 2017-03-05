@@ -8,9 +8,11 @@
 
       Array.prototype.forEach.call($item_links, function (elm, idx) {
         elm.href = originalUrls[idx];
-        elm.addEventListener('click', function (e) {
-          e.stopImmediatePropagation();
-        })
+        if (document.getElementById('queue').classList.length === 3) {
+          elm.addEventListener('click', function (e) {
+            e.stopImmediatePropagation();
+          });
+        }
       });
     }, 0);
   };
